@@ -1,42 +1,38 @@
-// /app/components/Sidebar.js
 'use client';
 import { useState } from 'react';
 import { 
-  Box,
   Drawer,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  IconButton,
   Collapse
 } from '@mui/material';
 import {
-  ChevronLeft as ChevronLeftIcon,
-  Menu as MenuIcon,
   Psychology as PsychologyIcon,
   BusinessCenter as BusinessIcon,
   ExpandLess,
   ExpandMore,
-  SmartToy as AIIcon
+  SmartToy as AIIcon,
+  MonetizationOn as FinanceIcon,
 } from '@mui/icons-material';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 const DRAWER_WIDTH = 240;
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(false);
-  const [rcSubmenuOpen, setRcSubmenuOpen] = useState(false);
   const pathname = usePathname();
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const [rcSubmenuOpen, setRcSubmenuOpen] = useState(false);
+  const [financeSubmenuOpen, setFinanceSubmenuOpen] = useState(false);
 
   const toggleRcSubmenu = () => {
     setRcSubmenuOpen(!rcSubmenuOpen);
+  };
+
+  const toggleFinanceSubmenu = () => {
+    setFinanceSubmenuOpen(!financeSubmenuOpen);
   };
 
   const NavLink = ({ href, icon, text, indent = false }) => (
@@ -62,7 +58,6 @@ export default function Sidebar() {
         <ListItemText 
           primary={text}
           sx={{ 
-            opacity: open ? 1 : 0,
             '& .MuiTypography-root': { 
               fontSize: indent ? '0.9rem' : '1rem',
               whiteSpace: 'normal',
@@ -75,73 +70,70 @@ export default function Sidebar() {
   );
 
   return (
-    <>
-      <IconButton
-        color="inherit"
-        aria-label="abrir menú"
-        onClick={toggleDrawer}
-        edge="start"
-        sx={{
-          position: 'fixed',
-          left: open ? DRAWER_WIDTH : 0,
-          top: '12px',
-          transition: 'left 0.2s',
-          zIndex: 1300,
-        }}
-      >
-        {open ? <ChevronLeftIcon /> : <MenuIcon />}
-      </IconButton>
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: DRAWER_WIDTH,
+        '& .MuiDrawer-paper': {
+          width: DRAWER_WIDTH,
+          backgroundColor: '#f5f5f5',
+          borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+          pt: 7,
+        },
+      }}
+      open={true} // Siempre abierto
+    >
+      <List>
+        <ListItem disablePadding>
+          <NavLink 
+            href="/brainhub" 
+            icon={<PsychologyIcon />} 
+            text="BrainHub"
+          />
+        </ListItem>
 
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: open ? DRAWER_WIDTH : 65,
-          transition: 'width 0.2s',
-          '& .MuiDrawer-paper': {
-            width: open ? DRAWER_WIDTH : 65,
-            transition: 'width 0.2s',
-            overflowX: 'hidden',
-            backgroundColor: '#f5f5f5',
-            borderRight: '1px solid rgba(0, 0, 0, 0.12)',
-            pt: 7,
-          },
-        }}
-        open={open}
-      >
-        <List>
-          <ListItem disablePadding>
+        <ListItem disablePadding>
+          <ListItemButton onClick={toggleRcSubmenu}>
+            <ListItemIcon>
+              <BusinessIcon />
+            </ListItemIcon>
+            <ListItemText primary="RC" />
+            {rcSubmenuOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
+
+        <Collapse in={rcSubmenuOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
             <NavLink 
-              href="/brainhub" 
-              icon={<PsychologyIcon />} 
-              text="BrainHub"
+              href="/rc/condiciones-comerciales" 
+              icon={<AIIcon />} 
+              text="Condiciones Comerciales AI"
+              indent
             />
-          </ListItem>
+          </List>
+        </Collapse>
 
-          <ListItem disablePadding>
-            <ListItemButton onClick={toggleRcSubmenu}>
-              <ListItemIcon>
-                <BusinessIcon />
-              </ListItemIcon>
-              <ListItemText 
-                primary="RC"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-              {open && (rcSubmenuOpen ? <ExpandLess /> : <ExpandMore />)}
-            </ListItemButton>
-          </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={toggleFinanceSubmenu}>
+            <ListItemIcon>
+              <FinanceIcon />
+            </ListItemIcon>
+            <ListItemText primary="Finanzas" />
+            {financeSubmenuOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
 
-          <Collapse in={rcSubmenuOpen && open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <NavLink 
-                href="/rc/condiciones-comerciales" 
-                icon={<AIIcon />} 
-                text="Condiciones Comerciales AI"
-                indent
-              />
-            </List>
-          </Collapse>
-        </List>
-      </Drawer>
-    </>
+        <Collapse in={financeSubmenuOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <NavLink 
+              href="/finanzas/ngc" 
+              icon={<AIIcon />} 
+              text="NGC"
+              indent
+            />
+          </List>
+        </Collapse>
+      </List>
+    </Drawer>
   );
 }

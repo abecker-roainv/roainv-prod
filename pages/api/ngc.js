@@ -93,7 +93,7 @@ const handler = async (req, res) => {
         xmlData = xmlData.replace(/\/>$/gm, ' />');
 
         // Agregar encabezado XML
-        const xmlWithHeader = `<?xml version="1.0" encoding="utf-8"?>\n${xmlData}`;
+        const xmlWithHeader = `<?xml version="1.0" encoding="utf-8"?>\n${xmlData.trimEnd()}`;
 
         res.setHeader("Content-Type", "application/xml");
         res.status(200).send(xmlWithHeader);

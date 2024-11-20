@@ -276,9 +276,19 @@ export default function ChatPage() {
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <AppBar position="sticky" color="default" elevation={1}>
-        <Toolbar variant="dense">
-          <Typography variant="h6" sx={{ fontSize: '1rem' }}>
-            Asistente de Condiciones Comerciales
+        <Toolbar variant="dense" sx={{ 
+          flexDirection: 'column', 
+          alignItems: 'flex-start', 
+          padding: 2
+        }}>
+          <Typography variant="h6" sx={{ fontSize: '1.1rem', mb: 2 }}>
+            Asistente condiciones comerciales
+          </Typography>
+          <Typography variant="body1" gutterBottom sx={{ mb: 1.5 }}>
+            Accede a información detallada sobre proyectos inmobiliarios, incluyendo condiciones comerciales, documentación legal y datos de contacto
+          </Typography>
+          <Typography variant="body2" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
+            La disponibilidad de unidades debe consultarse directamente con cada inmobiliaria
           </Typography>
         </Toolbar>
       </AppBar>

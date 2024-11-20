@@ -8,11 +8,14 @@ const NGCPage = () => {
   const [xmlData, setXmlData] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [originalFileName, setOriginalFileName] = useState("");
 
   const handleFileUpload = async (event) => {
     setLoading(true);
+    const file = event.target.files[0];
+    setOriginalFileName(file.name);
     const formData = new FormData();
-    formData.append("file", event.target.files[0]);
+    formData.append("file", file);
 
     try {
       const response = await fetch("/api/ngc", {
@@ -36,9 +39,10 @@ const NGCPage = () => {
   const handleDownload = () => {
     const blob = new Blob([xmlData], { type: "application/xml" });
     const url = URL.createObjectURL(blob);
+    const fileName = originalFileName.replace(/\.[^/.]+$/, '') || 'ngc-data';
     const link = document.createElement("a");
     link.href = url;
-    link.download = "ngc-data.xml";
+    link.download = `${fileName}.xml`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -53,9 +57,17 @@ const NGCPage = () => {
   return (
     <Container maxWidth="md">
       <Box sx={{ textAlign: "center", mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Procesar archivo NGC
+        <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
+          Convertidor XLSX a XML NGC-CMF
         </Typography>
+        <Typography variant="body1" gutterBottom sx={{ mb: 0 }}>
+          Transforma sus reportes desde formato Excel a XML normalizado para la CMF
+        </Typography>
+        <Typography variant="body2" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
+          Los archivos son procesados localmente y eliminados inmediatamente después de la conversión
+        </Typography>
+        </Box>
+        <Box sx={{ textAlign: "center", mt: 4 }}>
         <Button
           variant="contained"
           component="label"

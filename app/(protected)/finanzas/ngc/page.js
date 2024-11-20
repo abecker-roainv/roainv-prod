@@ -58,7 +58,7 @@ const NGCPage = () => {
     <Container maxWidth="md">
       <Box sx={{ textAlign: "center", mt: 4 }}>
         <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
-          Convertidor XLSX a XML NGC-CMF
+          Convertidor XLSX a XML NGC-CMF KAPTURE
         </Typography>
         <Typography variant="body1" gutterBottom sx={{ mb: 0 }}>
           Transforma sus reportes desde formato Excel a XML normalizado para la CMF

@@ -128,7 +128,7 @@ export default function Sidebar() {
             <NavLink 
               href="/finanzas/ngc" 
               icon={<AIIcon />} 
-              text="NGC"
+              text="NGC KAPTURE"
               indent
             />
           </List>

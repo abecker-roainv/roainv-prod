@@ -4,7 +4,8 @@ import GoogleProvider from 'next-auth/providers/google'
 const ALLOWED_DOMAINS = [
   'roainvestment.com',
   'renta-capital.cl',
-  'kapture.cl'
+  'kapture.cl',
+  'gstax.cl',
 ];
 
 export const authConfig = {

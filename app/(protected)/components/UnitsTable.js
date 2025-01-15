@@ -48,13 +48,15 @@ function UnitsTable() {
  const [properties, setProperties] = useState({});
  const [unitTypes, setUnitTypes] = useState({});
  const [subStates, setSubStates] = useState({});
- const [selectedUser, setSelectedUser] = useState('birent');
+ const [selectedUser, setSelectedUser] = useState('');
  const [selectedUnit, setSelectedUnit] = useState(null);
  const [modalOpen, setModalOpen] = useState(false);
  const [selectedStatus, setSelectedStatus] = useState('100');
  const [selectedType, setSelectedType] = useState('');
  const [selectedTypology, setSelectedTypology] = useState('');
  const [searchTerm, setSearchTerm] = useState('');
+ const [loadingMessage, setLoadingMessage] = useState('');
+
 
  const deptTypeId = useMemo(() => {
    return Object.entries(unitTypes).find(([id, nombre]) => 
@@ -84,7 +86,12 @@ function UnitsTable() {
  }, [data, deptTypeId]);
 
  const COLUMNS = [
-   { id: 'user', label: 'Usuario', sortable: true, getValue: () => selectedUser.charAt(0).toUpperCase() + selectedUser.slice(1) },
+  { 
+    id: 'user', 
+    label: 'Usuario', 
+    sortable: true, 
+    getValue: (row) => row.user ? row.user.charAt(0).toUpperCase() + row.user.slice(1) : '-'
+  },
    { 
     id: 'propiedad', 
     label: 'Propiedad', 
@@ -145,10 +152,47 @@ function UnitsTable() {
  };
 
  useEffect(() => {
-   setPage(0);
-   setLoading(true);
-   fetchData();
- }, [selectedUser]);
+  const loadAllData = async () => {
+    setLoading(true);
+    try {
+      setError(null);
+      const users = ['birent', 'amplo', 'principal'];
+      const responses = await Promise.all(users.map(async (user) => {
+        setLoadingMessage(`Cargando ${user}...`);
+        const response = await fetch(`/api/units?user=${user}`);
+        if (!response.ok) throw new Error(`Error getting ${user} data`);
+        return response.json();
+      }));
+ 
+      const allUnits = responses.flatMap((r, idx) => 
+        (r.units || []).map(unit => ({
+          ...unit,
+          user: ['birent', 'amplo', 'principal'][idx]
+        }))
+      );
+      const allProperties = responses.reduce((acc, r) => ({...acc, ...r.properties}), {});
+      const allUnitTypes = responses[0].unitTypes || {};
+ 
+      setProperties(allProperties);
+      setData(allUnits);
+      setUnitTypes(allUnitTypes);
+      setSubStates(SUB_ESTADOS);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error:', err);
+    } finally {
+      setLoading(false);
+      setLoadingMessage('');
+    }
+  };
+  loadAllData();
+ }, []);
+
+//  useEffect(() => {
+//    setPage(0);
+//    setLoading(true);
+//    fetchData();
+//  }, [selectedUser]);
 
  const fetchData = async () => {
    try {
@@ -181,26 +225,30 @@ function UnitsTable() {
  };
 
  const filteredData = useMemo(() => {
-   let filtered = data;
-
-   if (searchTerm) {
-     filtered = filtered.filter(row => searchInRow(row, searchTerm));
-   }
-
-   if (selectedStatus) {
-     filtered = filtered.filter(row => row.estado === selectedStatus);
-   }
-
-   if (selectedType) {
-     filtered = filtered.filter(row => row.unidad_tipo_id === selectedType);
-   }
-
-   if (selectedTypology) {
-     filtered = filtered.filter(row => row.tipologia === selectedTypology);
-   }
-
-   return filtered;
- }, [data, searchTerm, selectedStatus, selectedType, selectedTypology]);
+  let filtered = data;
+ 
+  if (searchTerm) {
+    filtered = filtered.filter(row => searchInRow(row, searchTerm));
+  }
+ 
+  if (selectedUser) {
+    filtered = filtered.filter(row => row.user === selectedUser);
+  }
+ 
+  if (selectedStatus) {
+    filtered = filtered.filter(row => row.estado === selectedStatus);
+  }
+ 
+  if (selectedType) {
+    filtered = filtered.filter(row => row.unidad_tipo_id === selectedType);
+  }
+ 
+  if (selectedTypology) {
+    filtered = filtered.filter(row => row.tipologia === selectedTypology);
+  }
+ 
+  return filtered;
+ }, [data, searchTerm, selectedStatus, selectedType, selectedTypology, selectedUser]);
 
  const sortedData = useMemo(() => {
    return [...filteredData].sort((a, b) => {
@@ -232,18 +280,22 @@ function UnitsTable() {
  return (
    <Box>
      <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-       <FormControl size="small" sx={{ minWidth: 200 }}>
-         <InputLabel>Usuario</InputLabel>
-         <Select
-           value={selectedUser}
-           onChange={(e) => setSelectedUser(e.target.value)}
-           label="Usuario"
-         >
-           <MenuItem value="birent">Birent</MenuItem>
-           <MenuItem value="amplo">Amplo</MenuItem>
-           <MenuItem value="principal">Principal</MenuItem>
-         </Select>
-       </FormControl>
+      <FormControl size="small" sx={{ minWidth: 200 }}>
+        <InputLabel>Usuario</InputLabel>
+        <Select
+          value={selectedUser}
+          onChange={(e) => {
+            setSelectedUser(e.target.value);
+            setPage(0);
+          }}
+          label="Usuario"
+        >
+          <MenuItem value="">Todos los usuarios</MenuItem>
+          <MenuItem value="birent">Birent</MenuItem>
+          <MenuItem value="amplo">Amplo</MenuItem>
+          <MenuItem value="principal">Principal</MenuItem>
+        </Select>
+        </FormControl>
 
        <FormControl size="small" sx={{ minWidth: 200 }}>
          <InputLabel>Estado</InputLabel>
@@ -360,9 +412,10 @@ function UnitsTable() {
      )}
 
      {loading ? (
-       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-         <CircularProgress />
-       </Box>
+       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '400px', gap: 2 }}>
+        <CircularProgress />
+        {/* <Typography>{loadingMessage}</Typography> */}
+      </Box>
      ) : error ? (
        <Box sx={{ color: 'error.main', mb: 2 }}>Error: {error}</Box>
      ) : (

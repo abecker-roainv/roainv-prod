@@ -92,10 +92,16 @@ const USERS = {
       fetchWithAuth(`${userConfig.basePath}/unidades?limit=5000`, token),
       fetchWithAuth(`${userConfig.basePath}/unidad-tipos`, token)
     ]);
+
+    // Debug
+    console.log('Property example:', properties.data.propiedades[0]);
  
     return {
       properties: properties.data.propiedades.reduce((acc, prop) => {
-        acc[prop.id] = prop.nombre || 'Sin nombre';
+        acc[prop.id] = {
+          nombre: prop.nombre || 'Sin nombre',
+          comuna: prop.direccion_nivel_3 || '-'
+        };
         return acc;
       }, {}),
       units: units.data.unidades,
@@ -109,4 +115,4 @@ const USERS = {
     console.error('Error en getData:', error);
     throw error;
   }
- }
+}

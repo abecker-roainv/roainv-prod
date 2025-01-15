@@ -6,6 +6,7 @@ const ALLOWED_DOMAINS = [
   'renta-capital.cl',
   'kapture.cl',
   'gstax.cl',
+  'bi-rent.cl'
 ];
 
 export const authConfig = {
@@ -29,17 +30,17 @@ export const authConfig = {
       const isAllowedDomain = ALLOWED_DOMAINS.includes(userDomain);
       const isAllowed = profile.email_verified && isAllowedDomain;
       
-      console.log('Domain check:', {
-        userDomain,
-        isAllowedDomain,
-        isAllowed
-      });
+      // console.log('Domain check:', {
+      //   userDomain,
+      //   isAllowedDomain,
+      //   isAllowed
+      // });
       
       return isAllowed;
     },
     async session({ session, token }) {
-      console.log('=== Session Callback ===');
-      console.log('Session user:', session?.user);
+      // console.log('=== Session Callback ===');
+      // console.log('Session user:', session?.user);
       
       if (session?.user) {
         session.user.id = token.sub;

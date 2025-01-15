@@ -5,7 +5,7 @@ import { Box, Container, Typography, Button, AppBar, Toolbar, Avatar, CircularPr
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import Sidebar from './components/Sidebar';
 import { signOut } from 'next-auth/react';
 
 export default function ProtectedLayout({ children }) {

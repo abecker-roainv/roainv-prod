@@ -19,6 +19,7 @@
     "@mui/x-data-grid": "^7.22.2",
     "fast-xml-parser": "^4.5.0",
     "formidable": "^3.5.2",
+    "lodash": "^4.17.21",
     "next": "14.0.3",
     "next-auth": "^4.24.10",
     "openai": "^4.72.0",

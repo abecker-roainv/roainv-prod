@@ -16,6 +16,8 @@ import {
   ExpandMore,
   SmartToy as AIIcon,
   MonetizationOn as FinanceIcon,
+  Apartment as RealEstateIcon,
+  HomeWork as UnitsIcon,
 } from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -26,6 +28,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [rcSubmenuOpen, setRcSubmenuOpen] = useState(false);
   const [financeSubmenuOpen, setFinanceSubmenuOpen] = useState(false);
+  const [popestateSubmenuOpen, setPopestateSubmenuOpen] = useState(false);
 
   const toggleRcSubmenu = () => {
     setRcSubmenuOpen(!rcSubmenuOpen);
@@ -33,6 +36,10 @@ export default function Sidebar() {
 
   const toggleFinanceSubmenu = () => {
     setFinanceSubmenuOpen(!financeSubmenuOpen);
+  };
+
+  const togglePopestateSubmenu = () => {
+    setPopestateSubmenuOpen(!popestateSubmenuOpen);
   };
 
   const NavLink = ({ href, icon, text, indent = false }) => (
@@ -81,7 +88,7 @@ export default function Sidebar() {
           pt: 7,
         },
       }}
-      open={true} // Siempre abierto
+      open={true}
     >
       <List>
         <ListItem disablePadding>
@@ -91,6 +98,27 @@ export default function Sidebar() {
             text="BrainHub"
           />
         </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton onClick={togglePopestateSubmenu}>
+            <ListItemIcon>
+              <RealEstateIcon />
+            </ListItemIcon>
+            <ListItemText primary="Pop Estate" />
+            {popestateSubmenuOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
+
+        <Collapse in={popestateSubmenuOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <NavLink 
+              href="/popestate/units" 
+              icon={<UnitsIcon />} 
+              text="Unidades"
+              indent
+            />
+          </List>
+        </Collapse>
 
         <ListItem disablePadding>
           <ListItemButton onClick={toggleRcSubmenu}>

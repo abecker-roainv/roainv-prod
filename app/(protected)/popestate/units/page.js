@@ -8,7 +8,7 @@ export default function UnitsPage() {
   return (
   <Box sx={{ p: 0, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Unidades
+        Stock
       </Typography>
       <UnitsTable />
       {/* <TestUnitsComponent /> */}

@@ -18,6 +18,7 @@ import {
   MonetizationOn as FinanceIcon,
   Apartment as RealEstateIcon,
   HomeWork as UnitsIcon,
+  Description as ContractsIcon,
 } from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -115,6 +116,12 @@ export default function Sidebar() {
               href="/popestate/units" 
               icon={<UnitsIcon />} 
               text="Unidades"
+              indent
+            />
+            <NavLink 
+              href="/popestate/contracts" 
+              icon={<ContractsIcon />} 
+              text="Contratos"
               indent
             />
           </List>

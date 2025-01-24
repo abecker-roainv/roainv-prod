@@ -26,7 +26,7 @@ const USERS = {
  };
  
  const SUB_ESTADOS = {
-  '0': 'Inicial',
+  '0': '...',
   '100': 'Por Vencer',
   '200': 'Por Renovar',
   '300': 'Renovado',
@@ -34,8 +34,10 @@ const USERS = {
   '500': 'En Espera Obra',
   '510': 'En Obra',
   '600': 'Por arrendar',
-  '700': 'Por liberar'
- };
+  '700': 'Por liberar',
+  '800': 'Reservada'
+};
+
  
  async function authenticate(user) {
   try {
@@ -87,10 +89,12 @@ const USERS = {
     const token = await authenticate(user);
     const userConfig = USERS[user];
  
-    const [properties, units, unitTypes] = await Promise.all([
+    const [properties, units, unitTypes, unidadEstados, unidadSubEstados] = await Promise.all([
       fetchWithAuth(`${userConfig.basePath}/propiedades?limit=5000`, token),
       fetchWithAuth(`${userConfig.basePath}/unidades?limit=5000`, token),
-      fetchWithAuth(`${userConfig.basePath}/unidad-tipos`, token)
+      fetchWithAuth(`${userConfig.basePath}/unidad-tipos`, token),
+      fetchWithAuth(`${userConfig.basePath}/unidad-estados`, token),
+      //fetchWithAuth('https://api.beta.pop.estate/api/unidades_subestado', token)
     ]);
 
     // Debug

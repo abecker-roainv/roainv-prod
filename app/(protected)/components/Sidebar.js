@@ -29,7 +29,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [rcSubmenuOpen, setRcSubmenuOpen] = useState(false);
   const [financeSubmenuOpen, setFinanceSubmenuOpen] = useState(false);
-  const [popestateSubmenuOpen, setPopestateSubmenuOpen] = useState(false);
+  const [birentSubmenuOpen, setbirentSubmenuOpen] = useState(false);
 
   const toggleRcSubmenu = () => {
     setRcSubmenuOpen(!rcSubmenuOpen);
@@ -39,8 +39,8 @@ export default function Sidebar() {
     setFinanceSubmenuOpen(!financeSubmenuOpen);
   };
 
-  const togglePopestateSubmenu = () => {
-    setPopestateSubmenuOpen(!popestateSubmenuOpen);
+  const togglebirentSubmenu = () => {
+    setbirentSubmenuOpen(!birentSubmenuOpen);
   };
 
   const NavLink = ({ href, icon, text, indent = false }) => (
@@ -101,25 +101,25 @@ export default function Sidebar() {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton onClick={togglePopestateSubmenu}>
+          <ListItemButton onClick={togglebirentSubmenu}>
             <ListItemIcon>
               <RealEstateIcon />
             </ListItemIcon>
-            <ListItemText primary="Pop Estate" />
-            {popestateSubmenuOpen ? <ExpandLess /> : <ExpandMore />}
+            <ListItemText primary="Birent" />
+            {birentSubmenuOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
         </ListItem>
 
-        <Collapse in={popestateSubmenuOpen} timeout="auto" unmountOnExit>
+        <Collapse in={birentSubmenuOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <NavLink 
-              href="/popestate/units" 
+              href="/birent/units" 
               icon={<UnitsIcon />} 
               text="Unidades"
               indent
             />
             <NavLink 
-              href="/popestate/contracts" 
+              href="/birent/contracts" 
               icon={<ContractsIcon />} 
               text="Contratos"
               indent

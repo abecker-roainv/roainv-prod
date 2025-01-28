@@ -18,6 +18,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import 'dayjs/locale/es';
 import moment from 'moment';
 import 'moment/locale/es';
+import ContractExpirations from './ContractExpirations';
 
 moment.locale('es');
 dayjs.locale('es');
@@ -37,7 +38,7 @@ const COLUMNS = [
  { id: 'fecha_ultima_modificacion', label: 'Última modificación', sortable: true }
 ];
 
-const USERS = ['todos', 'birent', 'amplo', 'principal'];
+const USERS = ['todos','principal'];
 
 const ESTADOS_CONTRATOS = {
   "100": { "nombre": "Creado", "id": 100 },
@@ -107,6 +108,8 @@ export default function ContractsTable() {
        };
 
        for (const user of USERS.filter(u => u !== 'todos')) {
+        setSelectedUser(user);
+
          const response = await fetch(`/api/contracts?user=${user}`);
          const result = await response.json();
 
@@ -228,9 +231,9 @@ export default function ContractsTable() {
    return isInDateRange && matchesState && matchesUser && matchesSubEstado;
  });
 
- useEffect(() => {
-  console.log('Contratos filtrados:', filteredContracts);
- }, [filteredContracts]);
+//  useEffect(() => {
+//   console.log('Contratos filtrados:', filteredContracts);
+//  }, [filteredContracts]);
 
  useEffect(() => {
   const timer = setInterval(() => setLastUpdate(moment()), 30000);
@@ -302,8 +305,15 @@ export default function ContractsTable() {
    page * rowsPerPage + rowsPerPage
  );
 
- if (loading) return <CircularProgress />;
- if (error) return <Typography color="error">Error: {error}</Typography>;
+if (loading) return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <CircularProgress />
+      <Typography variant="subtitle1" sx={{ mt: 2 }}>
+        Cargando datos de usuario: {selectedUser}
+      </Typography>
+    </Box>
+  );
+if (error) return <Typography color="error">Error: {error}</Typography>;
 
 
 
@@ -423,7 +433,7 @@ return (
       </LocalizationProvider>
  
       <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column' }}>
-      <FormControl sx={{ minWidth: 200, display: 'none' }} size="small">
+      <FormControl sx={{ minWidth: 200 }} size="small">
          <InputLabel>Estado</InputLabel>
           <Select
             value={selectedState}
@@ -437,7 +447,7 @@ return (
           </Select>
         </FormControl>
  
-        <FormControl sx={{ minWidth: 200, display:'none' }} size="small">
+        <FormControl sx={{ minWidth: 200 }} size="small">
           <InputLabel>Subestado Departamento</InputLabel>
           <Select
             value={selectedSubEstado}
@@ -493,8 +503,8 @@ return (
           {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography>Finalizados:</Typography>
             <Typography>{resumenContratos.finalizados}</Typography>
-          </Box> */}
-          {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography>Reservados:</Typography>
             <Typography>{resumenContratos.reservados}</Typography>
           </Box> */}
@@ -524,28 +534,61 @@ return (
       </Paper> */}
     </Box>
  
-    <Box sx={{ mb: 4 }}>
-      <Typography variant="subtitle1" gutterBottom>Vencimientos por mes 2025 <small><i>(según filtros actual)</i></small></Typography>
-      <Grid container spacing={2}>
-        {Object.entries(getMonthlyExpirations(filteredContracts)).map(([month, count]) => (
-          <Grid item xs={12} sm={3} md={2} lg={1} key={month}>
-            <Paper 
-              sx={{ 
-                p: 2,
-                textAlign: 'center',
-                bgcolor: count > 0 ? 'warning.light' : 'inherit',
-                height: '100%'
-              }}
-            >
-              <Typography variant="subtitle2">
-                {dayjs().month(Number(month)).format('MMMM')}
-              </Typography>
-              <Typography>{count}</Typography>
-            </Paper>
-          </Grid>
-        ))}
+{/* <Box sx={{ mb: 4 }}>
+  <Typography variant="subtitle1" gutterBottom>
+    Vencimientos 2025, por mes <small><i>(según filtros actual)</i></small>
+  </Typography>
+  <Grid container spacing={2}>
+    {Object.entries(getMonthlyExpirations(filteredContracts)).map(([month, count]) => (
+      <Grid item xs={12} sm={3} md={2} lg={1} key={month}>
+        <Paper 
+          sx={{ 
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '100px',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            textAlign: 'center',
+            bgcolor: count > 0 ? '#f3f4f6' : '#e5e7eb',
+            color: count > 0 ? '#1f2937' : '#6b7280'
+          }}
+        >
+          <Box 
+            sx={{ 
+              width: '100%', 
+              bgcolor: count > 0 ? '#006AC999' : '#9CA3AF', 
+              color: '#ffffff',
+              p: 1,
+              textAlign: 'center',
+              fontWeight: '700',
+              fontSize: '0.875rem',
+              textTransform: 'uppercase'
+            }}
+          >
+            {dayjs().month(Number(month)).format('MMM')}
+          </Box>
+
+          <Typography 
+            sx={{ 
+              fontWeight: '700', 
+              fontSize: '2rem', 
+              lineHeight: '1', 
+              mt: 'auto',
+              mb: 2
+            }}
+          >
+            {count}
+          </Typography>
+        </Paper>
       </Grid>
-      </Box>
+    ))}
+  </Grid>
+</Box> */}
+
+<ContractExpirations contracts={filteredContracts} />
+
 
     <Paper>
       <TableContainer>

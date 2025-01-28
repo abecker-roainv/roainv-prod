@@ -174,7 +174,7 @@ function UnitsTable() {
      setLoading(true);
      try {
        setError(null);
-       const users = ['birent', 'amplo', 'principal'];
+       const users = ['principal'];
        let allUnits = [];
        let allProperties = {};
        let allUnitTypes = {};

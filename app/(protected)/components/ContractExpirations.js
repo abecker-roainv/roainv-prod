@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { Grid, Box } from '@mui/material';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import MonthlyGrid from './MonthlyGrid';
 import dayjs from 'dayjs';
 
@@ -26,13 +28,36 @@ const ContractExpirations = ({ contracts }) => {
     return monthsData;
   }, [contracts]);
 
+  const chartData = useMemo(() => (
+    Object.entries(monthlyData).map(([month, value]) => ({
+      month: dayjs().month(Number(month)).format('MMM'),
+      vencimientos: value
+    }))
+  ), [monthlyData]);
+
   return (
-    <MonthlyGrid 
-      year={2025}
-      data={monthlyData}
-      title="Vencimientos 2025, por mes"
-      contracts={contracts}
-    />
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={6}>
+        <MonthlyGrid 
+          year={2025}
+          data={monthlyData}
+          title="Vencimientos 2025, por mes"
+          contracts={contracts}
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Box sx={{ height: 400, mt: 4 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="vencimientos" fill="#ff9800" />
+            </BarChart>
+          </ResponsiveContainer>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 

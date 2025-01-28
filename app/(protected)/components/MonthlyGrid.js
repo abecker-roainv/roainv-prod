@@ -58,10 +58,10 @@ const MonthlyGrid = ({ year, data, title, contracts }) => {
       </Typography>
       <Grid container spacing={2}>
         {months.map((month) => (
-          <Grid item xs={12} sm={3} md={2} lg={1} key={month}>
+            <Grid item xs={3} sm={3} md={3} lg={3} key={month}>
             <Paper 
-              onClick={() => handleMonthSelect(month)}
-              sx={{ 
+                onClick={() => handleMonthSelect(month)}
+                sx={{ 
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -74,39 +74,40 @@ const MonthlyGrid = ({ year, data, title, contracts }) => {
                 bgcolor: data[month] > 0 ? '#f3f4f6' : '#e5e7eb',
                 color: data[month] > 0 ? '#1f2937' : '#6b7280',
                 '&:hover': {
-                  bgcolor: data[month] > 0 ? '#e5e7eb' : '#d1d5db',
+                    bgcolor: data[month] > 0 ? '#e5e7eb' : '#d1d5db',
                 }
-              }}
+                }}
             >
-              <Box 
+                <Box 
                 sx={{ 
-                  width: '100%', 
-                  bgcolor: data[month] > 0 ? '#006AC999' : '#9CA3AF', 
-                  color: '#ffffff',
-                  p: 1,
-                  textAlign: 'center',
-                  fontWeight: '700',
-                  fontSize: '0.875rem',
-                  textTransform: 'uppercase'
+                    width: '100%', 
+                    bgcolor: data[month] > 0 ? '#006AC999' : '#9CA3AF', 
+                    color: '#ffffff',
+                    p: 1,
+                    textAlign: 'center',
+                    fontWeight: '700',
+                    fontSize: '0.875rem',
+                    textTransform: 'uppercase'
                 }}
-              >
+                >
                 {dayjs().month(month).format('MMM')}
-              </Box>
-              <Typography 
+                </Box>
+                <Typography 
                 sx={{ 
-                  fontWeight: '700', 
-                  fontSize: '2rem', 
-                  lineHeight: '1', 
-                  mt: 'auto',
-                  mb: 2
+                    fontWeight: '700', 
+                    fontSize: '2rem', 
+                    lineHeight: '1', 
+                    mt: 'auto',
+                    mb: 2
                 }}
-              >
+                >
                 {data[month]}
-              </Typography>
+                </Typography>
             </Paper>
-          </Grid>
+            </Grid>
         ))}
-      </Grid>
+        </Grid>
+
 
       <Modal
         open={selectedMonth !== null}
